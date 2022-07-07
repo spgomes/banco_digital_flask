@@ -1,5 +1,7 @@
 from validate_docbr import CPF
 
+from src.exceptions.validate_error import ValidateError
+
 cpf = CPF()
 
 class Cliente():
@@ -46,3 +48,14 @@ class Cliente():
 
     def cpf_isValid(self) -> bool:
         return cpf.validate(self.cpf)
+    
+    def isValid(self):
+        if not self.nome_isValid(self.nome):
+            raise ValidateError("O campo 'nome' deve ser preenchido!")
+        if not self.cpf_isValid(self.cpf):
+            raise ValidateError("CPF inválido!")
+        if not self.dataNascimento_isValid(self.dataNascimento):
+            raise ValidateError("Data de nascimento em formato inválido!")
+        if not self.telefone_isValid(self.telefone):
+            raise ValidateError("Telefone em formato inválido!")
+        return True

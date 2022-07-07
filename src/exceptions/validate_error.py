@@ -1,5 +1,5 @@
 
-from exceptions.base_error import BaseError
+from src.exceptions.base_error import BaseError
 
 
 class ValidateError(BaseError):
