@@ -2,12 +2,13 @@
 
 from src.entidades.cliente import Cliente
 from src.exceptions.client_not_found import ClientNotFound
+from src.persistencia.clientePersistence import ClientePersistence
 
 
 
 class ClienteServices():
-    def __init__(self) -> None:
-        pass
+    def __init__(self, persistence: ClientePersistence) -> None:
+        self.persistence = persistence
 
     def save_cliente(self, cliente: Cliente) -> bool:
         if cliente.isValid():

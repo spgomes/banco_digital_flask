@@ -12,7 +12,7 @@ class TesteClienteServices(TestCase):
         self.cliente = None
         self.dados_cliente = None
         self.clienteServices = None
-        self.persistenceServices = None
+        self.clientePersistence = None
 
     def setUp(self) -> None:
         self.dados_cliente = {
