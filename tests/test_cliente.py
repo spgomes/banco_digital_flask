@@ -15,7 +15,7 @@ class TestCliente(TestCase):
 
     
     def setUp(self) -> None:
-        self.dados_cliente = {'ID' : '1234ddga','Nome': 'José', 'CPF': '11122233345','Telefone': '35911112222'}
+        self.dados_cliente = {'ID' : '1234ddga','Nome': 'José', 'CPF': '11122233345','Telefone': '35911112222', 'DataNascimento':'22/33/2040' }
         self.cliente = Cliente(self.dados_cliente)
 
     def test_deve_retornar_nome(self):
@@ -42,4 +42,13 @@ class TestCliente(TestCase):
             
     def test_cpf_is_not_Valid(self):
         return self.assertFalse(cpf.validate(self.cliente.cpf))
+
+    def test_nome_isValid(self):
+        return self.assertTrue(self.cliente.nome_isValid) 
+
+    def test_telefone_isValid(self):
+        return self.assertTrue(self.cliente.telefone_isValid)
+
+    def test_data_nascimento_isValid(self):
+        return self.assertTrue(self.cliente.dataNascimento_isValid)  
         
