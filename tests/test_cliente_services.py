@@ -16,7 +16,7 @@ class TesteClienteServices(TestCase):
 
     def setUp(self) -> None:
         self.dados_cliente = {
-            'ID' : 'urn:uuid:12345678-1234-5678-1234-567812345678',
+            'ID' : '12345678-1234-5678-1234-567812345678',
             'Nome': 'José',
             'CPF': '83153824894',
             'Telefone': '35911112222', 
@@ -36,8 +36,8 @@ class TesteClienteServices(TestCase):
         self.clientePersistence.save_conta = Mock()
         self.clientePersistence.save_conta.return_value = True
         self.clientePersistence.get_one = Mock()
-        self.clientePersistence.get_one.return_value = self.dados_cliente
-        return self.assertTrue(self.clienteServices.save_conta(self.cliente.id))
+        self.clientePersistence.get_one.return_value = self.cliente
+        return self.assertTrue(self.clienteServices.save_conta(self.cliente))
 
     def test_consultar_contas(self):
         self.clientePersistence.get_all = Mock()

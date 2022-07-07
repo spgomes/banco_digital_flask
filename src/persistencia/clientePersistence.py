@@ -7,7 +7,7 @@ class ClientePersistence():
     def save_cliente(self, dados_cliente: dict) -> bool:
         pass
 
-    def save_conta(self) -> bool:
+    def save_conta(self, id: str) -> bool:
         pass
 
     def get_one(self) -> dict:
