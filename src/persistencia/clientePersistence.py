@@ -13,6 +13,6 @@ class ClientePersistence():
     def get_one(self) -> dict:
         pass
 
-    def consultar(self) -> list:
+    def get_all(self) -> list:
         pass
 

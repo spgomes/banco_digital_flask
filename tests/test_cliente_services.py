@@ -23,7 +23,7 @@ class TesteClienteServices(TestCase):
             'DataNascimento':'22/33/2040' 
             }
         self.cliente = Cliente(self.dados_cliente)
-        self.clienteServices = ClienteServices
+        self.clienteServices = ClienteServices(ClientePersistence)
         self.clientePersistence = ClientePersistence
 
 
@@ -35,9 +35,11 @@ class TesteClienteServices(TestCase):
     def test_criar_conta(self):
         self.clientePersistence.save_conta = Mock()
         self.clientePersistence.save_conta.return_value = True
+        self.clientePersistence.get_one = Mock()
+        self.clientePersistence.get_one.return_value = self.dados_cliente
         return self.assertTrue(self.clienteServices.save_conta(self.cliente.id))
 
     def test_consultar_contas(self):
-        self.clientePersistence.consultar = Mock()
-        self.clientePersistence.consultar.return_value = ['212121', '343456']
+        self.clientePersistence.get_all = Mock()
+        self.clientePersistence.get_all.return_value = ['212121', '343456']
         return self.assertEqual(self.clienteServices.consultar(self.cliente.id), ['212121', '343456'])

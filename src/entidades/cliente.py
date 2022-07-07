@@ -50,12 +50,12 @@ class Cliente():
         return cpf.validate(self.cpf)
     
     def isValid(self):
-        if not self.nome_isValid(self.nome):
+        if not self.nome_isValid():
             raise ValidateError("O campo 'nome' deve ser preenchido!")
-        if not self.cpf_isValid(self.cpf):
+        if not self.cpf_isValid():
             raise ValidateError("CPF inválido!")
-        if not self.dataNascimento_isValid(self.dataNascimento):
+        if not self.dataNascimento_isValid():
             raise ValidateError("Data de nascimento em formato inválido!")
-        if not self.telefone_isValid(self.telefone):
+        if not self.telefone_isValid():
             raise ValidateError("Telefone em formato inválido!")
         return True

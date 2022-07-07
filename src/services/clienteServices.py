@@ -18,15 +18,15 @@ class ClienteServices():
 
     def save_conta(self, cliente: Cliente) -> bool:
         try:
-            if self.get_cliente(self, cliente.__dados_cliente['id']) is None:
+            if self.get_one(self, cliente.__dados_cliente['ID']) is None:
                 raise ClientNotFound("Esse cliente não existe!")
-            self.persistence.save_conta(cliente.__dados_cliente['id'])
+            self.persistence.save_conta(cliente.__dados_cliente['ID'])
             return True
         except:
             return False
     
     def consultar(self, cliente: Cliente) -> list:
-        return self.persistence.get_all()
+        return self.persistence.get_all(self)
     
     def get_one(self, id: int) -> Cliente:
         dados_cliente = self.persistence.get_one(id)
