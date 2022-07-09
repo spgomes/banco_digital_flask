@@ -13,12 +13,12 @@ class TestConta(TestCase):
     
 
     def setUp(self) -> None:
-        self.dados_conta = {'idConta':'223344', 'Saldo':'1000', 'Historico': '[]', 'idCliente':'ID'}
+        self.dados_conta = {'id':'223344', 'Saldo':'1000', 'Historico': '[]', 'idCliente':'idCliente'}
         self.conta = Conta(self.dados_conta)
     
 
     def test_deve_retornar_id(self):
-        self.assertEqual(self.conta.idConta, self.dados_conta['idConta'])
+        self.assertEqual(self.conta.id, self.dados_conta['id'])
     
     def test_deve_retornar_saldo(self):
         self.assertEqual(self.conta.saldo, self.dados_conta['Saldo'])

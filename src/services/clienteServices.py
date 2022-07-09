@@ -18,7 +18,7 @@ class ClienteServices():
 
     def save_conta(self, cliente: Cliente) -> bool:
         try:
-            if self.get_one(cliente.id) is None:
+            if self.get_one(cliente.cpf) is None:
                 raise ClientNotFound("Esse cliente não existe!")
             self.persistence.save_conta()
             return True
@@ -29,8 +29,8 @@ class ClienteServices():
     def consultar(self) -> list:
         return self.persistence.get_all(self)
     
-    def get_one(self, id: int) -> Cliente:
-        dados_cliente = self.persistence.get_one(id)
+    def get_one(self, cpf: int) -> Cliente:
+        dados_cliente = self.persistence.get_one(cpf)
         cliente = Cliente(dados_cliente)
         return cliente
 

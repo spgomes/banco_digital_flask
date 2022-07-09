@@ -9,8 +9,8 @@ class Conta():
     
 
     @property
-    def idConta(self):
-        return self.__dados_conta['idConta']
+    def id(self):
+        return self.__dados_conta['id']
     
     @property
     def saldo(self):
@@ -28,7 +28,7 @@ class Conta():
         return self.__dados_conta
     
     def idConta_isValid(self):
-        return len(self.id_numeroConta) == 6
+        return len(self.id) == 6
     
     def saldo_isValid(self):
         return self.saldo >= 0
@@ -41,7 +41,7 @@ class Conta():
             raise ValidateError('ID do cliente inválido!')
         if not self.saldo_isValid(self.saldo):
             raise ValidateError('Saldo não pode ser menor que 0!')
-        if not self.idConta_isValid(self.idConta):
+        if not self.idConta_isValid(self.id):
             raise ValidateError('ID da conta inválido!')
         return True
     

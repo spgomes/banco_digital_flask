@@ -10,11 +10,6 @@ class Cliente():
 
     
     @property
-    def id(self):
-        return self.__dados_cliente['ID']
-    
-    
-    @property
     def nome(self):
         return self.__dados_cliente['Nome']
 

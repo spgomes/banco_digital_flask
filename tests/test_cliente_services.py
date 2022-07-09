@@ -1,6 +1,5 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, Mock
-from xmlrpc import client
+from unittest.mock import Mock
 from src.entidades.cliente import Cliente
 from src.persistencia.clientePersistence import ClientePersistence
 from src.services.clienteServices import ClienteServices
@@ -16,7 +15,7 @@ class TesteClienteServices(TestCase):
 
     def setUp(self) -> None:
         self.dados_cliente = {
-            'ID' : '12345678-1234-5678-1234-567812345678',
+            'id' : '12345678-1234-5678-1234-567812345678',
             'Nome': 'José',
             'CPF': '83153824894',
             'Telefone': '35911112222', 
@@ -42,4 +41,4 @@ class TesteClienteServices(TestCase):
     def test_consultar_contas(self):
         self.clientePersistence.get_all = Mock()
         self.clientePersistence.get_all.return_value = ['212121', '343456']
-        return self.assertEqual(self.clienteServices.consultar(self.cliente.id), ['212121', '343456'])
+        return self.assertEqual(self.clienteServices.consultar(), ['212121', '343456'])

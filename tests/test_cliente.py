@@ -15,7 +15,7 @@ class TestCliente(TestCase):
 
     
     def setUp(self) -> None:
-        self.dados_cliente = {'ID' : '1234ddga','Nome': 'José', 'CPF': '11122233345','Telefone': '35911112222', 'DataNascimento':'22/33/2040' }
+        self.dados_cliente = {'id' : '1234ddga','Nome': 'José', 'CPF': '11122233345','Telefone': '35911112222', 'DataNascimento':'22/33/2040' }
         self.cliente = Cliente(self.dados_cliente)
 
     def test_deve_retornar_nome(self):
