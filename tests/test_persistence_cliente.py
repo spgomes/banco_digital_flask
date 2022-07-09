@@ -1,8 +1,8 @@
 import sqlite3
 from unittest import TestCase
-from sqlite3 import Error as Err
 from src.entidades.cliente import Cliente
 from src.persistencia.clientePersistence import ClientePersistence
+
 
 
 
@@ -26,55 +26,32 @@ class TestPersistenceCliente(TestCase):
         
         try:
             conn = sqlite3.connect(':memory:')
+            print("Connection is established: Database is created in memory")
             cur = conn.cursor()
             cur.execute("""
-                    CREATE TABLE IF NOT EXISTS `banco_flask`.`Cliente` 
-                    (
-                    `Nome` VARCHAR(100) NOT NULL,
-                    `CPF` VARCHAR(11) NOT NULL,
-                    `Telefone` VARCHAR(11) NOT NULL,
-                    `DataNascimento` VARCHAR(10) NOT NULL,
-                    PRIMARY KEY (`CPF`)
-                    )
-                """)
+                        CREATE TABLE Client
+                        (Nome VARCHAR(100) NOT NULL PRIMARY KEY,
+                        CPF VARCHAR(11) NOT NULL,
+                        Telefone VARCHAR(11) NOT NULL,
+                        DataNascimento VARCHAR(10) NOT NULL)""")
             conn.commit()
 
             cur.execute("""
-                    CREATE TABLE IF NOT EXISTS `banco_flask`.`Conta` 
-                    (
-                    `id` INT AUTO_INCREMENT=100000 NOT NULL,
-                    `Saldo` INT NOT NULL,
-                    `Cliente_CPF` VARCHAR(11) NOT NULL,
-                    PRIMARY KEY (`id`),
-                    INDEX `fk_Conta_Cliente1_idx` (`Cliente_CPF` ASC) VISIBLE,
-                    CONSTRAINT `fk_Conta_Cliente1`
-                        FOREIGN KEY (`Cliente_CPF`)
-                        REFERENCES `banco_flask`.`Cliente` (`CPF`)
-                        ON DELETE NO ACTION
-                        ON UPDATE NO ACTION
-                        )
-        """)
+                        CREATE TABLE Conta
+                        (id INT NOT NULL PRIMARY KEY,
+                        Saldo INT NOT NULL,
+                        Cliente_CPF VARCHAR(11) NOT NULL)""")
             conn.commit()
             
             cur.execute("""
-                    CREATE TABLE IF NOT EXISTS `banco_flask`.`Historico` 
-                    (
-                    `id` INT NOT NULL,
-                    `Data` DATE NOT NULL,
-                    `ValorSaida` INT NULL,
-                    `ValorEntrada` INT NULL,
-                    `Conta_id` INT NOT NULL,
-                    PRIMARY KEY (`Conta_id`),
-                    INDEX `fk_Historico_Conta1_idx` (`Conta_id` ASC) VISIBLE,
-                    CONSTRAINT `fk_Historico_Conta1`
-                        FOREIGN KEY (`Conta_id`)
-                        REFERENCES `banco_flask`.`Conta` (`id`)
-                        ON DELETE NO ACTION
-                        ON UPDATE NO ACTION
-                        )
-        """)
+                        CREATE TABLE Historico(
+                        id INT NOT NULL PRIMARY KEY,
+                        Data DATE NOT NULL,
+                        ValorSaida INT NULL,
+                        ValorEntrada INT NULL,
+                        Conta_id INT NOT NULL)""")
             conn.commit()
-        except Err: print(Err)
+        except Exception as e: print (e)
 
 
     def tearDown(self) -> None:
