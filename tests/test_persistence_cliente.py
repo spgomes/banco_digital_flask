@@ -25,7 +25,7 @@ class TestPersistenceCliente(TestCase):
             'DataNascimento':'22/33/2040' 
             }
         self.cliente = Cliente(self.dados_cliente)
-        self.clientePersistence = ClientePersistence(SQLiteConnection())
+        self.clientePersistence = ClientePersistence(SQLiteConnection(conn))
         
         try:
             cur = conn.cursor()

@@ -108,9 +108,9 @@ class MySQLConnection(BDIAbstract):
 
 class SQLiteConnection():
     def _init_(self, conn):
-        super().__init__()
-        
-    conn = sqlite3.connect(':memory:')
+        self.conn = conn
+    
+    
 
     
     def execute(self, query, parameters):
