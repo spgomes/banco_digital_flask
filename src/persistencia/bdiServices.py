@@ -103,3 +103,35 @@ class MySQLConnection(BDIAbstract):
             print(e)
             return False
         return result
+
+
+class SQLiteConnection(BDIAbstract):
+    def _init_(self):
+        super().__init__()
+        self.cnx = conn
+
+    
+    def execute(self, query, parameters):
+
+        cursor = self.cnx.cursor()
+        cursor.execute(query, parameters)
+        self.cnx.commit()
+        cursor.close()
+
+
+        
+    def get_one(self, query, parameters) -> dict:
+
+        cursor = self.cnx.cursor()
+        cursor.execute(query, parameters)
+        resultado = cursor.fetchone()
+        cursor.close()
+
+
+    def get_all(self, query, parameters) -> list:
+            
+        cursor = self.cnx.cursor()
+        cursor.execute(query, parameters)
+        result = cursor.fetchall()
+        cursor.close()
+        self.cnx.close()

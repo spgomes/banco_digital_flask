@@ -1,10 +1,13 @@
 import sqlite3
 from unittest import TestCase
 from src.entidades.cliente import Cliente
+from src.persistencia.bdiServices import SQLiteConnection
 from src.persistencia.clientePersistence import ClientePersistence
 
 
-
+conn = sqlite3.connect(':memory:')
+print("Connection is established: Database is created in memory")
+cur = conn.cursor()
 
 class TestPersistenceCliente(TestCase):
     def __init__(self, methodName: str = ...) -> None:
@@ -22,14 +25,12 @@ class TestPersistenceCliente(TestCase):
             'DataNascimento':'22/33/2040' 
             }
         self.cliente = Cliente(self.dados_cliente)
-        self.clientePersistence = ClientePersistence
+        self.clientePersistence = ClientePersistence(SQLiteConnection)
         
         try:
-            conn = sqlite3.connect(':memory:')
-            print("Connection is established: Database is created in memory")
-            cur = conn.cursor()
+
             cur.execute("""
-                        CREATE TABLE Client
+                        CREATE TABLE Cliente
                         (Nome VARCHAR(100) NOT NULL PRIMARY KEY,
                         CPF VARCHAR(11) NOT NULL,
                         Telefone VARCHAR(11) NOT NULL,
@@ -55,9 +56,6 @@ class TestPersistenceCliente(TestCase):
 
 
     def tearDown(self) -> None:
-        conn = sqlite3.connect(':memory:')
-        cur = conn.cursor()
-
         cur.execute("DROP TABLE Historico")
         cur.execute("DROP TABLE Conta")
         cur.execute("DROP TABLE Cliente")

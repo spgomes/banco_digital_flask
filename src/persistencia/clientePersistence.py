@@ -1,12 +1,12 @@
 
 from src.entidades.cliente import Cliente
-from src.persistencia.bdiServices import MySQLConnection
+from src.persistencia.bdiServices import BDIAbstract
 
 
 
 
 class ClientePersistence():
-    def __init__(self, conexao: MySQLConnection) -> None:
+    def __init__(self, conexao: BDIAbstract) -> None:
         self.db = conexao
         
 
