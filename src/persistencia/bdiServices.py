@@ -1,5 +1,6 @@
 from abc import ABC
 import os
+import sqlite3
 import mysql.connector
 from dotenv import load_dotenv
 
@@ -105,27 +106,29 @@ class MySQLConnection(BDIAbstract):
         return result
 
 
-class SQLiteConnection(BDIAbstract):
-    def _init_(self):
+class SQLiteConnection():
+    def _init_(self, conn):
         super().__init__()
-        self.cnx = conn
+        
+    conn = sqlite3.connect(':memory:')
 
     
     def execute(self, query, parameters):
 
-        cursor = self.cnx.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(query, parameters)
-        self.cnx.commit()
+        self.conn.commit()
         cursor.close()
 
 
         
     def get_one(self, query, parameters) -> dict:
 
-        cursor = self.cnx.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         resultado = cursor.fetchone()
-        cursor.close()
+        return resultado
+        
 
 
     def get_all(self, query, parameters) -> list:

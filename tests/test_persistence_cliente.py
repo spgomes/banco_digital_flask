@@ -4,10 +4,10 @@ from src.entidades.cliente import Cliente
 from src.persistencia.bdiServices import SQLiteConnection
 from src.persistencia.clientePersistence import ClientePersistence
 
-
 conn = sqlite3.connect(':memory:')
+
 print("Connection is established: Database is created in memory")
-cur = conn.cursor()
+
 
 class TestPersistenceCliente(TestCase):
     def __init__(self, methodName: str = ...) -> None:
@@ -25,10 +25,10 @@ class TestPersistenceCliente(TestCase):
             'DataNascimento':'22/33/2040' 
             }
         self.cliente = Cliente(self.dados_cliente)
-        self.clientePersistence = ClientePersistence(SQLiteConnection)
+        self.clientePersistence = ClientePersistence(SQLiteConnection())
         
         try:
-
+            cur = conn.cursor()
             cur.execute("""
                         CREATE TABLE Cliente
                         (Nome VARCHAR(100) NOT NULL PRIMARY KEY,
@@ -56,6 +56,7 @@ class TestPersistenceCliente(TestCase):
 
 
     def tearDown(self) -> None:
+        cur = conn.cursor()
         cur.execute("DROP TABLE Historico")
         cur.execute("DROP TABLE Conta")
         cur.execute("DROP TABLE Cliente")
