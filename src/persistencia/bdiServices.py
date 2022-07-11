@@ -42,7 +42,7 @@ class BDIAbstract(ABC):
     
 
 class MySQLConnection(BDIAbstract):
-    def _init_(self):
+    def __init__(self):
         super().__init__(self.host, self.user, self.password, self.db)
         self.cnx = None
 
@@ -107,7 +107,7 @@ class MySQLConnection(BDIAbstract):
 
 
 class SQLiteConnection():
-    def _init_(self, conn):
+    def __init__(self, conn):
         self.conn = conn
     
     
@@ -127,6 +127,7 @@ class SQLiteConnection():
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         resultado = cursor.fetchone()
+        cursor.close()
         return resultado
         
 

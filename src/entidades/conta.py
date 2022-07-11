@@ -34,7 +34,7 @@ class Conta():
         return self.saldo >= 0
     
     def idCliente_isValid(self):
-        return len(self.idCliente) == 36
+        return len(self.idCliente) == 11
 
     def isValid(self):
         if not self.idCliente_isValid(self.idCliente):

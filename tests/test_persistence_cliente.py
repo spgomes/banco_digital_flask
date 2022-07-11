@@ -1,8 +1,10 @@
 import sqlite3
 from unittest import TestCase
 from src.entidades.cliente import Cliente
+from src.entidades.conta import Conta
 from src.persistencia.bdiServices import SQLiteConnection
 from src.persistencia.clientePersistence import ClientePersistence
+from src.persistencia.contaPersistence import ContaPersistence
 
 conn = sqlite3.connect(':memory:')
 
@@ -15,16 +17,19 @@ class TestPersistenceCliente(TestCase):
         self.cliente = None
         self.dados_cliente = None
         self.clientePersistence = None
+        self.conta = None
+        self.contaPersistence = None
 
     def setUp(self) -> None:
         self.dados_cliente = {
-            'id' : '12345678-1234-5678-1234-567812345678',
             'Nome': 'José',
             'CPF': '83153824894',
             'Telefone': '35911112222', 
-            'DataNascimento':'22/33/2040' 
+            'DataNascimento':'2012-12-01' 
             }
         self.cliente = Cliente(self.dados_cliente)
+        self.conta = Conta
+        self.contaPersistence = ContaPersistence(SQLiteConnection(conn))
         self.clientePersistence = ClientePersistence(SQLiteConnection(conn))
         
         try:
@@ -34,7 +39,7 @@ class TestPersistenceCliente(TestCase):
                         (Nome VARCHAR(100) NOT NULL PRIMARY KEY,
                         CPF VARCHAR(11) NOT NULL,
                         Telefone VARCHAR(11) NOT NULL,
-                        DataNascimento VARCHAR(10) NOT NULL)""")
+                        DataNascimento DATE NOT NULL)""")
             conn.commit()
 
             cur.execute("""
@@ -52,6 +57,9 @@ class TestPersistenceCliente(TestCase):
                         ValorEntrada INT NULL,
                         Conta_id INT NOT NULL)""")
             conn.commit()
+
+            cur.execute('INSERT INTO Conta(id, Saldo, Cliente_CPF) Values (1, 100000, 83153824894)')
+        
         except Exception as e: print (e)
 
 
@@ -64,4 +72,12 @@ class TestPersistenceCliente(TestCase):
 
 
     def test_deve_retornar_cliente(self):
-        return self.assertEqual(self.clientePersistence.get_one(self.cliente), self.cliente.__dados_cliente)
+        self.assertTrue(self.clientePersistence.save_cliente(self.cliente.to_db()))
+        retorno = self.clientePersistence.get_one(self.cliente)
+        self.assertEqual(retorno['CPF'], self.cliente.cpf)
+        self.assertEqual(retorno['Nome'], self.cliente.nome)
+        self.assertEqual(retorno['Telefone'], self.cliente.telefone)
+        
+    
+    def test_retorno_saldo_conta(self):
+        self.assertEqual(self.contaPersistence.get_saldo(1), 100000)
