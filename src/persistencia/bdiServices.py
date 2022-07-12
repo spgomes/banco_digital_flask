@@ -134,8 +134,8 @@ class SQLiteConnection():
 
     def get_all(self, query, parameters) -> list:
             
-        cursor = self.cnx.cursor()
+        cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         result = cursor.fetchall()
         cursor.close()
-        self.cnx.close()
+        return result

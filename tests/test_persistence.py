@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 from unittest import TestCase
 from src.entidades.cliente import Cliente
@@ -11,16 +12,18 @@ conn = sqlite3.connect(':memory:')
 print("Connection is established: Database is created in memory")
 
 
-class TestPersistenceCliente(TestCase):
+class TestPersistence(TestCase):
     def __init__(self, methodName: str = ...) -> None:
         super().__init__(methodName)
-        self.cliente = None
-        self.dados_cliente = None
-        self.clientePersistence = None
         self.conta = None
+        self.cliente = None
+        self.historico = None
+        self.dados_cliente = None
         self.contaPersistence = None
+        self.clientePersistence = None
 
     def setUp(self) -> None:
+        self.historico = {'Data':'2015/03/02', 'ValorSaida':700, 'ValorEntrada':900, 'Conta_id': 1, 'Conta_destino': 2}
         self.dados_cliente = {
             'Nome': 'José',
             'CPF': '83153824894',
@@ -51,14 +54,17 @@ class TestPersistenceCliente(TestCase):
             
             cur.execute("""
                         CREATE TABLE Historico(
-                        id INT NOT NULL PRIMARY KEY,
+                        id INT PRIMARY KEY,
                         Data DATE NOT NULL,
                         ValorSaida INT NULL,
                         ValorEntrada INT NULL,
-                        Conta_id INT NOT NULL)""")
+                        Conta_id INT NULL,
+                        Conta_destino INT NULL
+                        )""")
             conn.commit()
 
             cur.execute('INSERT INTO Conta(id, Saldo, Cliente_CPF) Values (1, 100000, 83153824894)')
+            
         
         except Exception as e: print (e)
 
@@ -68,7 +74,7 @@ class TestPersistenceCliente(TestCase):
         cur.execute("DROP TABLE Historico")
         cur.execute("DROP TABLE Conta")
         cur.execute("DROP TABLE Cliente")
-        conn.close()
+
 
 
     def test_deve_retornar_cliente(self):
@@ -81,3 +87,20 @@ class TestPersistenceCliente(TestCase):
     
     def test_retorno_saldo_conta(self):
         self.assertEqual(self.contaPersistence.get_saldo(1), 100000)
+    
+    def test_update_saldo(self):
+        self.assertTrue(self.contaPersistence.deposito_saldo(1, 100000))
+        self.assertEqual(self.contaPersistence.get_saldo(1), 200000)
+        self.assertTrue(self.contaPersistence.retirada_saldo(1, 100000))
+        self.assertEqual(self.contaPersistence.get_saldo(1), 100000)
+        
+
+    def test_save_historico(self):
+        self.assertTrue(self.contaPersistence.save_deposito(self.historico))
+        self.assertTrue(self.contaPersistence.save_transferencia(self.historico))
+        self.assertTrue(self.contaPersistence.save_retirada(self.historico))
+
+    def test_retorno_historico(self):
+        self.assertTrue(self.contaPersistence.save_deposito(self.historico))
+        retorno_historico = self.contaPersistence.get_all_historico(1)
+        self.assertEqual(retorno_historico[0][3], self.historico['ValorEntrada'])

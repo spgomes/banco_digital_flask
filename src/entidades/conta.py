@@ -6,7 +6,7 @@ from src.exceptions.validate_error import ValidateError
 class Conta():
     def __init__(self, dados_conta: dict) -> None:
         self.__dados_conta = dados_conta
-    
+        
 
     @property
     def id(self):
@@ -16,9 +16,6 @@ class Conta():
     def saldo(self):
         return self.__dados_conta['Saldo']
     
-    @property
-    def historico(self):
-        return self.__dados_conta['Historico']
     
     @property
     def idCliente(self):
