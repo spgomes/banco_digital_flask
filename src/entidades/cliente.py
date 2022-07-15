@@ -1,49 +1,45 @@
 from validate_docbr import CPF
 
-from src.exceptions.validate_error import ValidateError
+from src.exceptions.validade_error import ValidateError
 
 cpf = CPF()
 
-class Cliente():
+
+class Cliente:
     def __init__(self, dados_cliente: dict) -> None:
         self.__dados_cliente = dados_cliente
 
-    
     @property
     def nome(self):
-        return self.__dados_cliente['Nome']
+        return self.__dados_cliente["Nome"]
 
-    
     @property
     def cpf(self):
-        return self.__dados_cliente['CPF']
+        return self.__dados_cliente["CPF"]
 
-    
     @property
     def telefone(self):
-        return self.__dados_cliente['Telefone']
+        return self.__dados_cliente["Telefone"]
 
-    
     @property
     def dataNascimento(self):
-        return self.__dados_cliente['DataNascimento']
-
+        return self.__dados_cliente["DataNascimento"]
 
     def to_db(self):
         return self.__dados_cliente
 
     def nome_isValid(self) -> bool:
         return self.nome != None
-    
+
     def telefone_isValid(self) -> bool:
         return len(str(self.telefone)) == 11
-    
+
     def dataNascimento_isValid(self) -> bool:
         return len(str(self.dataNascimento)) == 10
 
     def cpf_isValid(self) -> bool:
         return cpf.validate(self.cpf)
-    
+
     def isValid(self):
         if not self.nome_isValid():
             raise ValidateError("O campo 'nome' deve ser preenchido!")

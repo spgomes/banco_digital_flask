@@ -12,7 +12,6 @@ class BDIAbstract(ABC):
         self.__password = password
         self.__db = db
 
-
     @property
     def host(self):
         return self.__host
@@ -29,37 +28,36 @@ class BDIAbstract(ABC):
     def db(self):
         return self.__db
 
-    
-    
     def connect(self):
         pass
+
     def execute(self, query, parameters) -> bool:
         pass
+
     def get_one(self, query, parameters) -> dict:
         pass
+
     def get_all(self, query, parameters) -> list:
         pass
-    
+
 
 class MySQLConnection(BDIAbstract):
     def __init__(self):
         super().__init__(self.host, self.user, self.password, self.db)
         self.cnx = None
 
-    
     def connect(self):
         try:
             self.cnx = mysql.connector.connect(
-                                                user = os.getenv('USER'), 
-                                                password = os.getenv('PASSWORD'),
-                                                host = os.getenv('HOST'),
-                                                database =os.getenv('NAME'),
-                                                )
+                user=os.getenv("USER"),
+                password=os.getenv("PASSWORD"),
+                host=os.getenv("HOST"),
+                database=os.getenv("NAME"),
+            )
         except mysql.connector.Error as err:
             print(err)
             return False
         return True
-
 
     def execute(self, query, parameters):
         try:
@@ -74,8 +72,7 @@ class MySQLConnection(BDIAbstract):
             print(e)
             return False
         return True
-        
-        
+
     def get_one(self, query, parameters) -> dict:
         try:
             if not self.connect():
@@ -89,7 +86,6 @@ class MySQLConnection(BDIAbstract):
             print(e)
             return None
         return resultado
-
 
     def get_all(self, query, parameters) -> list:
         try:
@@ -106,13 +102,10 @@ class MySQLConnection(BDIAbstract):
         return result
 
 
-class SQLiteConnection():
+class SQLiteConnection:
     def __init__(self, conn):
         self.conn = conn
-    
-    
 
-    
     def execute(self, query, parameters):
 
         cursor = self.conn.cursor()
@@ -120,8 +113,6 @@ class SQLiteConnection():
         self.conn.commit()
         cursor.close()
 
-
-        
     def get_one(self, query, parameters) -> dict:
 
         cursor = self.conn.cursor()
@@ -129,11 +120,9 @@ class SQLiteConnection():
         resultado = cursor.fetchone()
         cursor.close()
         return resultado
-        
-
 
     def get_all(self, query, parameters) -> list:
-            
+
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         result = cursor.fetchall()

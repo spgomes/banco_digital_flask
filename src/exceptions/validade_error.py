@@ -1,4 +1,3 @@
-
 from src.exceptions.base_error import BaseError
 
 

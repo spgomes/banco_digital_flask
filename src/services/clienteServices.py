@@ -1,12 +1,9 @@
-
-
 from src.entidades.cliente import Cliente
 from src.exceptions.client_not_found import ClientNotFound
 from src.persistencia.clientePersistence import ClientePersistence
 
 
-
-class ClienteServices():
+class ClienteServices:
     def __init__(self, persistence: ClientePersistence) -> None:
         self.persistence = persistence
 
@@ -24,13 +21,11 @@ class ClienteServices():
             return True
         except:
             return False
-    
-    
+
     def consultar(self) -> list:
         return self.persistence.get_all(self)
-    
+
     def get_one(self, cpf: int) -> Cliente:
         dados_cliente = self.persistence.get_one(cpf)
         cliente = Cliente(dados_cliente)
         return cliente
-

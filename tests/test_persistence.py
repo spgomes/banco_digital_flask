@@ -23,7 +23,7 @@ class TestPersistence(TestCase):
         self.clientePersistence = None
 
     def setUp(self) -> None:
-        self.historico = {'Data':'2015/03/02', 'ValorSaida':700, 'ValorEntrada':900, 'Conta_id': 1, 'Conta_destino': 2}
+        self.historico = {'Data':'2022/07/12', 'ValorSaida':700, 'ValorEntrada':900, 'Conta_id': 1, 'Conta_destino': 2}
         self.dados_cliente = {
             'Nome': 'José',
             'CPF': '83153824894',
@@ -79,7 +79,8 @@ class TestPersistence(TestCase):
 
     def test_deve_retornar_cliente(self):
         self.assertTrue(self.clientePersistence.save_cliente(self.cliente.to_db()))
-        retorno = self.clientePersistence.get_one(self.cliente)
+        cpf = self.cliente.cpf
+        retorno = self.clientePersistence.get_one(cpf)
         self.assertEqual(retorno['CPF'], self.cliente.cpf)
         self.assertEqual(retorno['Nome'], self.cliente.nome)
         self.assertEqual(retorno['Telefone'], self.cliente.telefone)
@@ -104,3 +105,5 @@ class TestPersistence(TestCase):
         self.assertTrue(self.contaPersistence.save_deposito(self.historico))
         retorno_historico = self.contaPersistence.get_all_historico(1)
         self.assertEqual(retorno_historico[0][3], self.historico['ValorEntrada'])
+        retorno_historico1 = self.contaPersistence.get_historico(1, '2022/07/12', '2022/07/13')
+        self.assertTrue(retorno_historico1[0], self.historico)
