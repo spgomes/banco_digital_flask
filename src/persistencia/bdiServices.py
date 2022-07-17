@@ -60,7 +60,7 @@ class MySQLConnection(BDIAbstract):
         try:
             if not self.connect():
                 return False
-            cursor = self.cnx.cursor()
+            cursor = self.cnx.cursor()                 
             cursor.execute(query.replace('?', '%s'), tuple(parameters))
             self.cnx.commit()
             cursor.close()

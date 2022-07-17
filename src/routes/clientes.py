@@ -20,12 +20,12 @@ def inserir_cliente():
         'Telefone': dados['Telefone'],
         'DataNascimento':dados['DataNascimento']
     })
-
-    if not clienteServices.save_cliente(cliente):
-        return "Error", 
-    if not clienteServices.save_conta(cliente):
-        return "Erro", 500
-    return "Ok", 204
+    try:
+        if not clienteServices.save_cliente(cliente):
+            return "Não foi possivel criar o cliente.", 500 
+        if not clienteServices.save_conta(cliente):
+            return "Não foi possivel criar a conta.", 500
+    except:return "Ok", 204
 
 
 @clientes.route("/cliente/<cpf>")

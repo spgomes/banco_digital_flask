@@ -1,4 +1,5 @@
 from datetime import datetime
+from src.exceptions.saldo_insuficiente import SaldoInsuficiente
 from src.persistencia.contaPersistence import ContaPersistence
 
 
@@ -36,31 +37,35 @@ class ContaServices:
         return lista
 
 
-    def deposito(self, id, valorEntrada):
+    def deposito(self, contaOrigem, valor):
+    
         self.historico = {
-            "ValorEntrada": valorEntrada,
-            "Data": datetime,
-            "Conta_id": id,
+            "ValorEntrada": valor,
+            "Data": datetime.today().strftime('%Y-%m-%d'),
+            "Conta_id": contaOrigem,
         }
-        valorEntrada = valorEntrada*100
+        valorEntradaDB = int(valor)
+        valorEntradaDB = valorEntradaDB*100
+        
         try:
-            if self.persistence.deposito_saldo(id, valorEntrada*100):
+            if self.persistence.deposito_saldo(contaOrigem, valorEntradaDB):
                 self.save_deposito(self.historico)
             return True
         except:
             return False
 
 
-    def retirada(self, id, valorSaida):
-        valorSaida = valorSaida*100
+    def retirada(self, contaOrigem, valor):
+        valorSaidadb = int(valor)
+        valorSaidadb = valorSaidadb *100
         try:
-            if self.consulta_saldo(id) - valorSaida <= 0:
+            if self.consulta_saldo(contaOrigem) - valorSaidadb <= 0:
                 return False
-            if self.persistence.retirada_saldo(id, valorSaida):
+            if self.persistence.retirada_saldo(contaOrigem, valorSaidadb):
                 self.historico = {
-                    "valorSaida": valorSaida,
-                    "Data": datetime,
-                    "Conta_id": id,
+                    "ValorSaida": valor,
+                    "Data": datetime.today().strftime('%Y-%m-%d'),
+                    "Conta_id": contaOrigem,
                 }
                 self.save_retirada(self.historico)
             return True
@@ -68,19 +73,19 @@ class ContaServices:
             return False
 
 
-    def transferencia(self, id, contaDestino, valor):
-        contaDestino = contaDestino
-        valor = valor*100
+    def transferencia(self, contaOrigem, contaDestino, valor):
+        valorDB = int(valor)
+        valorDB = valorDB*100
         try:
-            if self.consulta_saldo(id) - valor <= 0:
+            if self.consulta_saldo(contaOrigem) - valorDB <= 0:
+                raise SaldoInsuficiente("Saldo insuficiente!")
+            if not self.deposito(contaOrigem, valor):
                 return False
-            if not self.deposito(contaDestino, valor):
-                return False
-            self.retirada(id, valor)
+            self.retirada(contaOrigem, valor)
             self.historico = {
                 "ValorSaida": valor,
-                "Conta_id": id,
-                "Data": datetime,
+                "Conta_id": contaOrigem,
+                "Data": datetime.today().strftime('%Y-%m-%d'),
                 "Conta_destino": contaDestino,
             }
             self.save_tranferencia(self.historico)

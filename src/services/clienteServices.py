@@ -1,5 +1,6 @@
 from src.entidades.cliente import Cliente
 from src.exceptions.client_not_found import ClientNotFound
+from src.exceptions.criar_cliente import ClienteNaoCriado
 from src.persistencia.clientePersistence import ClientePersistence
 
 
@@ -11,7 +12,7 @@ class ClienteServices:
         if cliente.isValid():
             self.persistence.save_cliente(cliente.to_db())
             return True
-        return False
+        raise ClienteNaoCriado("Não foi possível criar o cliente.")
 
     def save_conta(self, cliente: Cliente) -> bool:
         try:
