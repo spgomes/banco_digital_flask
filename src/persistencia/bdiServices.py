@@ -6,11 +6,8 @@ from dotenv import load_dotenv
 
 
 class BDIAbstract(ABC):
-    def __init__(self, host, user, password, db):
-        self.__host = host
-        self.__user = user
-        self.__password = password
-        self.__db = db
+    def __init__(self):
+        pass
 
     @property
     def host(self):
@@ -43,7 +40,7 @@ class BDIAbstract(ABC):
 
 class MySQLConnection(BDIAbstract):
     def __init__(self):
-        super().__init__(self.host, self.user, self.password, self.db)
+        super().__init__()
         self.cnx = None
 
     def connect(self):
@@ -59,12 +56,12 @@ class MySQLConnection(BDIAbstract):
             return False
         return True
 
-    def execute(self, query, parameters):
+    def execute(self, query:str, parameters):
         try:
             if not self.connect():
                 return False
             cursor = self.cnx.cursor()
-            cursor.execute(query, parameters)
+            cursor.execute(query.replace('?', '%s'), tuple(parameters))
             self.cnx.commit()
             cursor.close()
             self.cnx.close()
@@ -73,12 +70,12 @@ class MySQLConnection(BDIAbstract):
             return False
         return True
 
-    def get_one(self, query, parameters) -> dict:
+    def get_one(self, query:str, parameters) -> dict:
         try:
             if not self.connect():
                 return False
             cursor = self.cnx.cursor()
-            cursor.execute(query, parameters)
+            cursor.execute(query.replace('?', '%s'), tuple(parameters))
             resultado = cursor.fetchone()
             cursor.close()
             self.cnx.close()
@@ -87,12 +84,12 @@ class MySQLConnection(BDIAbstract):
             return None
         return resultado
 
-    def get_all(self, query, parameters) -> list:
+    def get_all(self, query:str, parameters) -> list:
         try:
             if not self.connect():
                 return False
             cursor = self.cnx.cursor()
-            cursor.execute(query, parameters)
+            cursor.execute(query.replace('?', '%s'), tuple(parameters))
             result = cursor.fetchall()
             cursor.close()
             self.cnx.close()
@@ -106,7 +103,7 @@ class SQLiteConnection:
     def __init__(self, conn):
         self.conn = conn
 
-    def execute(self, query, parameters):
+    def execute(self, query:str, parameters):
 
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)

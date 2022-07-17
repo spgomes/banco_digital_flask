@@ -19,7 +19,7 @@ class TestContaServices(TestCase):
         self.dados_conta = {
             'id' : 1,
             'idCliente' : '11122233344',
-            'Saldo' : 100000
+            'Saldo' : 1000000
         }
         self.conta = Conta(self.dados_conta)
         self.persistence = ContaPersistence 
@@ -49,5 +49,5 @@ class TestContaServices(TestCase):
         return self.assertTrue(self.contaService.retirada(1,5000))
         
     def test_transferencia_retornar_true(self):
-        self.assertTrue(self.contaService.transferencia(1,2,100000))
+        self.assertTrue(self.contaService.transferencia(1,2,10))
         

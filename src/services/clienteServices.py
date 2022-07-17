@@ -17,13 +17,13 @@ class ClienteServices:
         try:
             if self.get_one(cliente.cpf) is None:
                 raise ClientNotFound("Esse cliente não existe!")
-            self.persistence.save_conta()
+            self.persistence.save_conta(cliente)
             return True
         except:
             return False
 
     def consultar(self) -> list:
-        return self.persistence.get_all(self)
+        return self.persistence.get_all()
 
     def get_one(self, cpf: int) -> Cliente:
         dados_cliente = self.persistence.get_one(cpf)

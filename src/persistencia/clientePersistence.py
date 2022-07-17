@@ -22,17 +22,17 @@ class ClientePersistence:
         except:
             return False
 
-    def save_conta(self, dados_conta: dict, cliente: Cliente) -> bool:
+    def save_conta(self, cliente: Cliente) -> bool:
         dados_conta = {
-            "Cliente_id": cliente.cpf,
+            "Cliente_CPF": cliente.cpf,
             "Saldo": 0,
         }
         try:
             self.db.execute(
-                """INSERT INTO Conta (Cliente_id, Saldo, id) 
-                    VALUES (?, ?, ?)""",
+                """INSERT INTO Conta (Cliente_CPF, Saldo) 
+                    VALUES (?, ?)""",
                 [
-                    dados_conta["Cliente_id"],
+                    dados_conta["Cliente_CPF"],
                     dados_conta["Saldo"],
                 ],
             )
@@ -53,6 +53,7 @@ class ClientePersistence:
             "DataNascimento": retorno[3],
             "id": retorno[4],
         }
+
 
     def get_all(self) -> list:
         return self.db.get_all("SELECT * FROM Cliente", [])

@@ -4,45 +4,42 @@ from src.persistencia.contaPersistence import ContaPersistence
 from src.services.contaServices import ContaServices
 
 
-contas= Blueprint('contas', __name__)
+contas= Blueprint("contas", __name__)
 
-db = MySQLConnection
+db = MySQLConnection()
 contaPersistence = ContaPersistence(db)
 contaService = ContaServices(contaPersistence)
 
 
-@contas.route("/conta/<id>")
-def consultar_saldo():
+@contas.route("/conta")
+def ola():
+    return "Contas"
+
+@contas.route("/conta/saldo/<id>")
+def consultar_saldo(id):
     try:
         saldo = contaService.consulta_saldo(id)
     except: "Not Found", 404
-    
     return jsonify(saldo/100)
 
 
-@contas.route("/conta", methods=['POST'])
-def deposito():
-    conta = request.args.get('conta', None)
-    valor = request.args.get('valor', None)
-
+@contas.route("/conta/deposito/<conta>/<valor>", methods=['POST'])
+def deposito(conta, valor):
     try:
         contaService.deposito(conta, valor)
     except: "Not Found", 404
     return "Ok", 204
 
 
-@contas.route("/conta", methods=['POST'])
-def retirada():
-    conta = request.args.get('conta', None)
-    valor = request.args.get('valor', None)
-
+@contas.route("/conta/retirada/<conta>/<valor>", methods=['POST'])
+def retirada(conta, valor):
     try:
         contaService.retirada(conta, valor)
-    except: "Not Found", 404
+    except: return "Not Found", 404
     return "Ok", 204
 
 
-@contas.route("/conta", methods=['POST'])
+@contas.route("/conta/transferencia", methods=['POST'])
 def transferencia():
     contaOrigem = request.args.get('conta origem', None)
     contaFinal = request.args.get('conta final', None)
@@ -54,21 +51,23 @@ def transferencia():
     return "Ok", 204
 
 
-@contas.route("/conta")
+@contas.route("/conta/<id>/<inicio>/<fim>")
 def consultar_historico():
-     
-    id = request.args.get('Numero da conta', None)
-    data_menor = request.args.get('Data menor', None)
-    data_maior = request.args.get('Data maior', None)
+
+    id = request.args.get('id', None)
+    data_menor = request.args.get('inicio', None)
+    data_maior = request.args.get('fim', None)
     
     try:
         lista = contaService.consultar_historico(id, data_menor, data_maior)
-    except: "Not Found", 404
+    except: return "Not Found", 404
     
     return jsonify(lista)
 
 
-@contas.route("/conta")
+@contas.route("/conta/historico/<id>")
 def consultar_todos_historicos():
     historico = contaService.consultar_todos_historicos()
     return jsonify(historico)
+
+

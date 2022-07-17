@@ -42,8 +42,9 @@ class ContaServices:
             "Data": datetime,
             "Conta_id": id,
         }
+        valorEntrada = valorEntrada*100
         try:
-            if self.persistence.deposito_saldo(id, valorEntrada):
+            if self.persistence.deposito_saldo(id, valorEntrada*100):
                 self.save_deposito(self.historico)
             return True
         except:
@@ -51,7 +52,7 @@ class ContaServices:
 
 
     def retirada(self, id, valorSaida):
-
+        valorSaida = valorSaida*100
         try:
             if self.consulta_saldo(id) - valorSaida <= 0:
                 return False
@@ -68,6 +69,8 @@ class ContaServices:
 
 
     def transferencia(self, id, contaDestino, valor):
+        contaDestino = contaDestino
+        valor = valor*100
         try:
             if self.consulta_saldo(id) - valor <= 0:
                 return False

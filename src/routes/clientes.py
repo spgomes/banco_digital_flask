@@ -6,7 +6,7 @@ from src.services.clienteServices import ClienteServices
 
 clientes = Blueprint('clientes', __name__)
 
-db = MySQLConnection
+db = MySQLConnection()
 clientePersistence = ClientePersistence(db)
 clienteServices = ClienteServices(clientePersistence)
 
@@ -14,16 +14,15 @@ clienteServices = ClienteServices(clientePersistence)
 def inserir_cliente():
     dados = request.json
 
-
     cliente = Cliente({
-        dados['Nome'],
-        dados['CPF'],
-        dados['Telefone'],
-        dados['DataNascimento']
+        'Nome': dados['Nome'],
+        'CPF': dados['CPF'],
+        'Telefone': dados['Telefone'],
+        'DataNascimento':dados['DataNascimento']
     })
 
     if not clienteServices.save_cliente(cliente):
-        return "Error", 406
+        return "Error", 
     if not clienteServices.save_conta(cliente):
         return "Erro", 500
     return "Ok", 204
@@ -33,7 +32,7 @@ def inserir_cliente():
 def consultar_cliente(cpf):
     try:
         cliente = clienteServices.get_one(cpf)
-    except: "Not Found", 404
+    except: return "Not Found", 404
     
     resultado = {
         "Nome": cliente.nome,
@@ -48,12 +47,5 @@ def consultar_cliente(cpf):
 def consultar_clientes():
     clientes = clienteServices.consultar()
 
-    resultado = list(map(lambda x: {
-        "Nome": x.nome,
-        "CPF": x.cpf,
-        "Telefone": x.telefone,
-        "DataNascimento": x.dataNascimento},
-        clientes))
-
-    return jsonify(resultado)
+    return jsonify(clientes)
 
