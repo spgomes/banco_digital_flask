@@ -20,9 +20,10 @@ class Conta:
     def to_db(self):
         return self.__dados_conta
 
-    def idConta_isValid(self):
-        return len(self.id) == 6
-
+        """
+        Funções de validação para a entidade. Os dados devem estar dentro do padrão para serem validos.
+        """
+    
     def saldo_isValid(self):
         return self.saldo >= 0
 
@@ -30,6 +31,10 @@ class Conta:
         return len(self.idCliente) == 11
 
     def isValid(self):
+        """
+        É chamada pelo service para fazer as validações da entidade.
+        
+        """
         if not self.idCliente_isValid(self.idCliente):
             raise ValidateError("ID do cliente inválido!")
         if not self.saldo_isValid(self.saldo):

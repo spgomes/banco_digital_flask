@@ -4,6 +4,13 @@ from src.persistencia.contaPersistence import ContaPersistence
 
 
 class ContaServices:
+    """
+    O service aplica regras de negócio e utiliza de funções da entidada para validar os dados.
+    Retorna erro caso nao seja válidos.
+    Os dados sendo válidos, envia os dados para a persistência.
+    Os valores são multiplicados por 100 para trata-los como inteiro.
+    
+    """
     def __init__(self, persistence: ContaPersistence) -> None:
         self.persistence = persistence
         self.historico: dict = {}
@@ -44,8 +51,7 @@ class ContaServices:
             "Data": datetime.today().strftime('%Y-%m-%d'),
             "Conta_id": contaOrigem,
         }
-        valorEntradaDB = int(valor)
-        valorEntradaDB = valorEntradaDB*100
+        valorEntradaDB = int(float(valor)*100)
         
         try:
             if self.persistence.deposito_saldo(contaOrigem, valorEntradaDB):
@@ -56,8 +62,8 @@ class ContaServices:
 
 
     def retirada(self, contaOrigem, valor):
-        valorSaidadb = int(valor)
-        valorSaidadb = valorSaidadb *100
+        valorSaidadb = int(float(valor)*100)
+        
         try:
             if self.consulta_saldo(contaOrigem) - valorSaidadb <= 0:
                 return False
@@ -65,7 +71,7 @@ class ContaServices:
                 self.historico = {
                     "ValorSaida": valor,
                     "Data": datetime.today().strftime('%Y-%m-%d'),
-                    "Conta_id": contaOrigem,
+                    "Conta_id": contaOrigem
                 }
                 self.save_retirada(self.historico)
             return True
@@ -74,21 +80,12 @@ class ContaServices:
 
 
     def transferencia(self, contaOrigem, contaDestino, valor):
-        valorDB = int(valor)
-        valorDB = valorDB*100
+        valorDB = int(float(valor)*100)
         try:
             if self.consulta_saldo(contaOrigem) - valorDB <= 0:
                 raise SaldoInsuficiente("Saldo insuficiente!")
-            if not self.deposito(contaOrigem, valor):
-                return False
             self.retirada(contaOrigem, valor)
-            self.historico = {
-                "ValorSaida": valor,
-                "Conta_id": contaOrigem,
-                "Data": datetime.today().strftime('%Y-%m-%d'),
-                "Conta_destino": contaDestino,
-            }
-            self.save_tranferencia(self.historico)
+            self.deposito(contaDestino, valor)
             return True
         except:
             return False

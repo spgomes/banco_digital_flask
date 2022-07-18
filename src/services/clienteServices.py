@@ -8,6 +8,12 @@ class ClienteServices:
     def __init__(self, persistence: ClientePersistence) -> None:
         self.persistence = persistence
 
+        """
+        O service utiliza de funções da entidada para validar os dados e retorna erro caso nao seja válidos.
+        Os dados sendo válidos, envia os dados para a persistência.
+        
+        """
+
     def save_cliente(self, cliente: Cliente) -> bool:
         if cliente.isValid():
             self.persistence.save_cliente(cliente.to_db())

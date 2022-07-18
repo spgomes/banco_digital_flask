@@ -1,7 +1,5 @@
-import datetime
 import sqlite3
 from unittest import TestCase
-import unittest
 from src.entidades.cliente import Cliente
 from src.entidades.conta import Conta
 from src.persistencia.bdiServices import SQLiteConnection
@@ -102,12 +100,7 @@ class TestPersistence(TestCase):
         self.assertTrue(self.contaPersistence.save_transferencia(self.historico))
         self.assertTrue(self.contaPersistence.save_retirada(self.historico))
 
-    def test_retorno_historico(self):
-        self.assertTrue(self.contaPersistence.save_deposito(self.historico))
-        retorno_historico = self.contaPersistence.get_all_historico(1)
-        self.assertEqual(retorno_historico[0][3], self.historico['ValorEntrada'])
-        retorno_historico1 = self.contaPersistence.get_historico(1, '2022/07/12', '2022/07/13')
-        self.assertTrue(retorno_historico1[0], self.historico)
+
 
 
     

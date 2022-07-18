@@ -1,5 +1,4 @@
 from validate_docbr import CPF
-
 from src.exceptions.validade_error import ValidateError
 
 cpf = CPF()
@@ -28,6 +27,15 @@ class Cliente:
     def to_db(self):
         return self.__dados_cliente
 
+
+    """
+        Funções de validação para a entidade. Os dados devem estar dentro do padrão para serem validos.
+        Nome: str
+        Telefone: str de exatos 11 dígitos
+        Data de Nascimento: str de exatos 10 dígitos
+        CPF: Válido conforme o validador 'validate_docbr'
+
+    """
     def nome_isValid(self) -> bool:
         return self.nome != None
 
@@ -41,6 +49,10 @@ class Cliente:
         return cpf.validate(self.cpf)
 
     def isValid(self):
+        """
+        É chamada pelo service para fazer as validações da entidade.
+
+        """
         if not self.nome_isValid():
             raise ValidateError("O campo 'nome' deve ser preenchido!")
         if not self.cpf_isValid():

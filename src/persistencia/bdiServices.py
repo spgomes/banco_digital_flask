@@ -1,6 +1,5 @@
 from abc import ABC
 import os
-import sqlite3
 import mysql.connector
 from dotenv import load_dotenv
 
@@ -9,6 +8,9 @@ class BDIAbstract(ABC):
     def __init__(self):
         pass
 
+        """
+        Classe abstrata de conexão com o banco de dados. 
+        """
     @property
     def host(self):
         return self.__host
@@ -42,6 +44,11 @@ class MySQLConnection(BDIAbstract):
     def __init__(self):
         super().__init__()
         self.cnx = None
+        
+        """
+        Classe para se conectar com o MySQL. 
+
+        """
 
     def connect(self):
         try:
@@ -55,6 +62,7 @@ class MySQLConnection(BDIAbstract):
             print(err)
             return False
         return True
+
 
     def execute(self, query:str, parameters):
         try:
@@ -70,6 +78,7 @@ class MySQLConnection(BDIAbstract):
             return False
         return True
 
+
     def get_one(self, query:str, parameters) -> dict:
         try:
             if not self.connect():
@@ -83,6 +92,7 @@ class MySQLConnection(BDIAbstract):
             print(e)
             return None
         return resultado
+
 
     def get_all(self, query:str, parameters) -> list:
         try:
@@ -103,23 +113,27 @@ class SQLiteConnection:
     def __init__(self, conn):
         self.conn = conn
 
-    def execute(self, query:str, parameters):
+        """
+        Classe para se conectar com o SQlite.
+        É usado o SQLite em memória para realizar os testes da persistência.
+        """
 
+    def execute(self, query:str, parameters):
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         self.conn.commit()
         cursor.close()
 
-    def get_one(self, query, parameters) -> dict:
 
+    def get_one(self, query, parameters) -> dict:
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         resultado = cursor.fetchone()
         cursor.close()
         return resultado
 
-    def get_all(self, query, parameters) -> list:
 
+    def get_all(self, query, parameters) -> list:
         cursor = self.conn.cursor()
         cursor.execute(query, parameters)
         result = cursor.fetchall()

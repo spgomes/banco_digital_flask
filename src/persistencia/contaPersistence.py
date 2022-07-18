@@ -4,6 +4,9 @@ from src.persistencia.bdiServices import BDIAbstract
 class ContaPersistence:
     def __init__(self, conexao: BDIAbstract) -> None:
         self.db = conexao
+    """
+    A persistência executa os comando SQL.
+    """
 
 
     def get_saldo(self, id):
@@ -55,14 +58,32 @@ class ContaPersistence:
 
 
     def get_all_historico(self, id):
-        lista = self.db.get_all("SELECT* FROM Historico WHERE Conta_id = ?", [id])
-        return lista
+        lista = self.db.get_all("SELECT Data, ValorSaida, ValorEntrada FROM Historico WHERE Conta_id = ?", [id])
+        retorno = []
+        for registro in lista:
+            retorno.append({
+                "Data": registro[0].strftime('%Y-%m-%d'),
+                "ValorSaida": registro[1],
+                "ValorEntrada": registro[2]
+            })
+        return retorno
 
 
-    def get_historico(self, id, data_menor, data_maior):
-        lista = (
-            "SELECT * FROM Operacao WHERE conta_id = ? and datediff(DT_Simulacao, ?) >= 0 and datediff(?, DT_Simulacao) >= 0",
-            [id, data_menor, data_maior],
+    def get_historico(self, id, inicio, fim):
+        print(inicio, fim)
+        lista = self.db.get_all(
+            """SELECT Data, ValorSaida, ValorEntrada 
+            FROM Historico 
+            WHERE Conta_id = ? and datediff(Data, ?) >= 0 and datediff(?, Data) >= 0 order by Data""",
+            [id, inicio, fim],
         )
-        return lista
+
+        retorno = []
+        for registro in lista:
+            retorno.append({
+                "Data": registro[0].strftime('%Y-%m-%d'),
+                "ValorSaida": registro[1],
+                "ValorEntrada": registro[2]
+            })
+        return retorno
 

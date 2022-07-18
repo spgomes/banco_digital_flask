@@ -78,22 +78,17 @@ def transferencia():
 
 
 @contas.route("/conta/<id>/<inicio>/<fim>")
-def consultar_historico():
-
-    id = request.args.get('id', None)
-    data_menor = request.args.get('inicio', None)
-    data_maior = request.args.get('fim', None)
-    
+def consultar_historico(id, inicio, fim):
     try:
-        lista = contaService.consultar_historico(id, data_menor, data_maior)
+        lista = contaService.consultar_historico(id, inicio, fim)
     except: return "Not Found", 404
     
     return jsonify(lista)
 
 
 @contas.route("/conta/historico/<id>")
-def consultar_todos_historicos():
-    historico = contaService.consultar_todos_historicos()
+def consultar_todos_historicos(id):
+    historico = contaService.consultar_todos_historicos(id)
     return jsonify(historico)
 
 

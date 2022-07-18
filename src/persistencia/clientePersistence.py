@@ -3,8 +3,12 @@ from src.persistencia.bdiServices import BDIAbstract
 
 
 class ClientePersistence:
+    """
+    A persistência executa os comando SQL.
+    """
     def __init__(self, conexao: BDIAbstract) -> None:
         self.db = conexao
+
 
     def save_cliente(self, dados_cliente: dict) -> bool:
         try:
@@ -21,6 +25,7 @@ class ClientePersistence:
             return True
         except:
             return False
+
 
     def save_conta(self, cliente: Cliente) -> bool:
         dados_conta = {
@@ -40,11 +45,12 @@ class ClientePersistence:
         except:
             return False
 
+
     def get_one(self, cpf) -> dict:
         retorno = self.db.get_one(
-            """SELECT CPF, Nome, Telefone, DataNascimento, Conta.id FROM Cliente LEFT JOIN Conta ON (CPF=Cliente_CPF)
-                                WHERE CPF = ?""",
-            [cpf],
+            """SELECT CPF, Nome, Telefone, DataNascimento, Conta.id 
+                FROM Cliente LEFT JOIN Conta ON (CPF=Cliente_CPF)
+                WHERE CPF = ?""",[cpf]
         )
         return {
             "CPF": retorno[0],
